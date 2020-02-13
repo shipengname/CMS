@@ -166,6 +166,14 @@
 						</c:forEach>
 					</ul>
 				</div>
+				<div class="card" style="width: 18rem;">
+					<div class="card-header">热门文章</div>
+					<ul class="list-group list-group-flush">
+						<c:forEach items="${articleList}" var="a">
+							<li class="list-group-item"><a href="">${a.title }</a></li>
+						</c:forEach>
+					</ul>
+				</div>
 			</div>
 
 		</div>
