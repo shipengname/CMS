@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 命名空间的值为dao层接口的权限定名 -->
+<mapper namespace="com.shipeng.dao.UserDao">
+
+	<resultMap type="User" id="userMap">
+		<id property="id" column="id"/>
+		<result property="username" column="username"/>
+		<result property="password" column="password"/>
+		<result property="birthday" column="birthday"/>
+		<result property="gender" column="gender"
+			javaType="com.shipeng.bean.enums.Gender"
+			typeHandler="org.apache.ibatis.type.EnumOrdinalTypeHandler"/>
+		<result property="created" column="created"/>
+		<result property="locked"  column="locked"/>
+	</resultMap>
+	<insert id="addUser">
+		insert into cms_user
+		<set> 
+			<if test="username!=null">
+				username=#{username},
+			</if>
+			<if test="password!=null">
+				password=#{password},
+			</if>
+			<if test="locked==null">
+				locked=0,
+			</if>
+			<if test="created==null">
+				created=now(),
+			</if>
+		</set>
+	</insert>
+	<!-- 查询用户名是否存在 -->
+	<select id="getCountByUserName" resultType="int">
+		select count(*) from cms_user where username=#{username}
+	</select>
+	
+	<!-- 登錄 -->
+	<select id="login" resultType="User">
+		select * from cms_user where username=#{username} and password = #{password}
+	</select>
+	
+	<!-- sql片段 -->
+	<sql id="user_cloum">id,username,password,birthday,gender,created,locked</sql>
+	<!-- 查询用户列表 -->
+	<select id="getUserList" resultMap="userMap">
+		select <include refid="user_cloum"></include> from cms_user
+		<where>
+			<if test="username!=null and username!=''"> and username like concat('%',#{username},'%')</if>
+		</where>
+	</select>
+	<select id="getOne" resultMap="userMap">
+		select <include refid="user_cloum"/> from cms_user where id=#{id}
+	</select>
+	
+	<!-- 用户是否禁用 -->
+	<update id="updateLocked">
+		update cms_user set locked=#{locked} where id=#{id}
+	</update>
+	<insert id="advice">
+		insert into comment values(null,#{user.id},#{article.id},#{content},now())
+	</insert>
+</mapper>

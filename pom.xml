@@ -226,10 +226,9 @@
 			<version>2.8.5</version>
 		</dependency>
 
-
 		<dependency>
-			<groupId>com.lq</groupId>
-			<artifactId>lq_utils</artifactId>
+			<groupId>com.sp</groupId>
+			<artifactId>sp_utils</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
