@@ -9,8 +9,26 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<script type="text/javascript" src="/resource/js/jquery-3.2.1.js"></script>
 <script type="text/javascript">
-
+	function add(text) {
+		var user='${sessionScope.user}';
+		
+		if(user==""){
+			location.href="/user/login";
+		}else{
+			var url=window.location.href;
+			$.post("/favorite/addFavo",{text:text,url:url},function(msg){
+				if(msg==-1){
+					alert("url不合法");
+				}else if(msg==0){
+					alert("收藏失败");
+				}else{
+					alert("收藏成功")
+				}
+			},"json")
+		}
+	}
 </script>
 </head>
 <body>
@@ -29,7 +47,8 @@
 			<img alt="" src="">
 			${article.user.username }
 			<fmt:formatDate value="${article.created }" pattern="yyyy-MM-dd"/>
-			${article.content }
+			${article.content }<br>
+			<button onclick="add('${article.title }')">收藏</button>
 		</div>
 		<!-- 输入评论 -->
 		<div>
@@ -59,6 +78,11 @@
 				<c:if test="${comment.size()==0}">
 					<span style="color: gray">暂无评论，快来抢沙发吧！</span>
 				</c:if>
+			</div>
+			<div>
+				<c:forEach items="${list }" var="l">
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="${l.url }">${l.text }</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				</c:forEach>
 			</div>
 	</div>
 	

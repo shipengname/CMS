@@ -24,6 +24,8 @@ public class ArticleController {
 	@Autowired
 	private ArticleService service;
 	
+	
+	
 	@RequestMapping("selectsByAdmin")
 	public String getArticleList(Model m,@RequestParam(defaultValue = "1") Integer pageNum,@RequestParam(defaultValue = "3") Integer pageSize,Article article) {
 		PageInfo<Article> info = service.selectByAdmin(article,pageNum,pageSize);
