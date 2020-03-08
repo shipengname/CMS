@@ -159,9 +159,11 @@
 			<!-- 中间的右边 -->
 			<div class="col-md-3 split min_h_500">
 				<div class="card" style="width: 18rem;">
-					<div class="card-header">最新文章</div>
+					<div class="card-header">最新图片</div>
 					<ul class="list-group list-group-flush">
 						<c:forEach items="${newArcitles}" var="a">
+							<img src="/pic/${a.picture}" class="d-block w-100" alt="..."
+										width="280px" height="200px">
 							<li class="list-group-item"><a href="">${a.title }</a></li>
 						</c:forEach>
 					</ul>

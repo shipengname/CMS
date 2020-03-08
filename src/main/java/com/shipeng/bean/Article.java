@@ -41,6 +41,8 @@ public class Article implements Serializable{
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date updated;
 	
+	private Integer lx;
+	
 	private User user;
 	public User getUser() {
 		return user;

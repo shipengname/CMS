@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.bw.utils.StringUtil;
+import com.shipeng.utils.StringUtil;
 import com.github.pagehelper.PageInfo;
 import com.shipeng.bean.Comment;
 import com.shipeng.bean.User;

@@ -5,6 +5,7 @@ import java.util.List;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,7 +13,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.bw.utils.StringUtil;
+import com.shipeng.utils.StringUtil;
+
+import scala.annotation.serializable;
+
 import com.github.pagehelper.PageInfo;
 import com.shipeng.bean.Article;
 import com.shipeng.bean.Category;
@@ -27,6 +31,10 @@ import com.shipeng.service.UserService;
 import com.shipeng.utils.CMSJsonUtil;
 @Controller
 public class AdminController {
+	
+	@Autowired
+	private RedisTemplate redisTemplate;
+	
 	@Autowired
 	private ArticleService articleService;
 	
@@ -45,6 +53,20 @@ public class AdminController {
 		//查询所有的栏目
 		List<Channel> channelList= channelService.selects();
 		m.addAttribute("channelList", channelList);
+		//先从redis中查询有没有项目
+		List<Channel> redisChannel = redisTemplate.opsForList().range("cms_channel", 0, -1);
+		//如果没有先从mysql中查询频道
+		if(redisChannel==null||redisChannel.size()==0) {
+			System.err.println("从mysql中查询了频道！！");
+			List<Channel> channelall = channelService.selects();
+			//查询频道后放入redis中
+			redisTemplate.opsForList().leftPushAll("cms_channel", channelall.toArray());
+			m.addAttribute("channelList", channelall);
+		}else {
+			//如果有直接放入model
+			System.err.println("从redis中查询了频道");
+			m.addAttribute("channelList", redisChannel);
+		}
 		if(article.getChannel_id()!=null) {
 			List<Category> cates = categoryService.selects(article.getChannel_id());
 			m.addAttribute("cates", cates);

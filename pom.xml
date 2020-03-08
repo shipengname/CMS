@@ -4,8 +4,8 @@
   <artifactId>shipengcms</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>war</packaging>
-  <!-- 定义主要版本号 -->
-<!-- 一次定义  反复使用  类似Java变量   下面使用时${}取版本号  -->
+<!-- 定义主要版本号 -->
+	<!-- 一次定义 反复使用 类似Java变量 下面使用时${}取版本号 -->
 	<properties>
 		<spring.version>4.3.13.RELEASE</spring.version>
 		<mybatis.version>3.4.2</mybatis.version>
@@ -33,12 +33,66 @@
 
 	<!-- jar依赖 -->
 	<dependencies>
+
+
+		<!-- redis依赖 -->
+		<dependency>
+			<groupId>redis.clients</groupId>
+			<artifactId>jedis</artifactId>
+			<version>2.9.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-redis</artifactId>
+			<version>1.8.7.RELEASE</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.springframework</groupId>
+					<artifactId>spring-aop</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<!-- kafka配置 -->
+		<dependency>
+			<groupId>org.springframework.kafka</groupId>
+			<artifactId>spring-kafka</artifactId>
+			<version>2.2.0.RELEASE</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.kafka</groupId>
+			<artifactId>kafka_2.10</artifactId>
+			<version>0.8.2.1</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>jmxri</artifactId>
+					<groupId>com.sun.jmx</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>jms</artifactId>
+					<groupId>javax.jms</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>jmxtools</artifactId>
+					<groupId>com.sun.jdmk</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>fastjson</artifactId>
+			<version>1.2.7</version>
+		</dependency>
+
+
+
+
 		<!-- spring 及springMVC -->
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-core</artifactId>
 			<version>${spring.version}</version>
-			<!-- 依赖范围:都需要  默认为该依赖范围，无须显示指定 -->
+			<!-- 依赖范围:都需要 默认为该依赖范围，无须显示指定 -->
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
@@ -99,7 +153,7 @@
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 			<version>${mysql.version}</version>
-			<!-- 依赖范围:测试运行打包需要  -->
+			<!-- 依赖范围:测试运行打包需要 -->
 			<scope>runtime</scope>
 		</dependency>
 		<!-- 日志文件管理包 -->
@@ -117,7 +171,7 @@
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>${junit-version}</version>
-			<!--  依赖范围  编译测试需要   打包运行不需要 -->
+			<!-- 依赖范围 编译测试需要 打包运行不需要 -->
 			<scope>test</scope>
 		</dependency>
 		<!-- 上传组件包 -->
@@ -163,6 +217,7 @@
 			<artifactId>jackson-databind</artifactId>
 			<version>${jackson.version}</version>
 		</dependency>
+
 
 		<!-- 依赖的公共包 -->
 		<dependency>
@@ -225,16 +280,15 @@
 			<artifactId>gson</artifactId>
 			<version>2.8.5</version>
 		</dependency>
-
 		<dependency>
-			<groupId>com.sp</groupId>
-			<artifactId>sp_utils</artifactId>
+			<groupId>com.shipeng</groupId>
+			<artifactId>sp_util</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 
 
-<!-- 插件 -->
+	<!-- 插件 -->
 	<build>
 		<plugins>
 			<plugin>
@@ -264,29 +318,29 @@
 
 				</configuration>
 			</plugin>
-
 			<plugin>
 				<groupId>org.eclipse.jetty</groupId>
 				<artifactId>jetty-maven-plugin</artifactId>
 				<version>9.3.7.v20160115</version>
 				<configuration>
 					<httpConnector>
-					   <!-- 端口号 -->
+						<!-- 端口号 -->
 						<port>80</port>
 						<!-- 项目访问路径 -->
 						<host>localhost</host>
 					</httpConnector>
-				  <contextHandlers>
-					   <jettyWebAppContext>
-					 <!--     虚拟路径 -->
-					    <contextPath>/pic</contextPath>
-					<!--     物理路径 -->
-					    <resourceBase>d:/pic/</resourceBase>
-					   </jettyWebAppContext>
+					<contextHandlers>
+						<jettyWebAppContext>
+							<!-- 虚拟路径 -->
+							<contextPath>/pic</contextPath>
+							<!-- 物理路径 -->
+							<resourceBase>e:/pic/</resourceBase>
+						</jettyWebAppContext>
 					</contextHandlers>
 					<scanIntervalSeconds>1</scanIntervalSeconds>
 				</configuration>
 			</plugin>
+
 
 		</plugins>
 	</build>
