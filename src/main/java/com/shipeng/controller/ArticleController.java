@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +18,7 @@ import com.github.pagehelper.PageInfo;
 import com.shipeng.bean.Article;
 import com.shipeng.bean.Category;
 import com.shipeng.bean.Channel;
+import com.shipeng.dao.ArticleRepository;
 import com.shipeng.service.ArticleService;
 
 @RequestMapping("article")
@@ -24,8 +27,12 @@ public class ArticleController {
 	@Autowired
 	private ArticleService service;
 	
-	
-	
+	@Autowired
+	private ArticleRepository articleRepository;
+	@Autowired
+	private RedisTemplate redisTemplate;
+	@Autowired
+	private KafkaTemplate<String, String> kafkaTemplate;
 	@RequestMapping("selectsByAdmin")
 	public String getArticleList(Model m,@RequestParam(defaultValue = "1") Integer pageNum,@RequestParam(defaultValue = "3") Integer pageSize,Article article) {
 		PageInfo<Article> info = service.selectByAdmin(article,pageNum,pageSize);
@@ -47,6 +54,13 @@ public class ArticleController {
 	@ResponseBody
 	@RequestMapping("updateArticle")
 	public boolean update(Article article) {
+		kafkaTemplate.send("articles","shenhe"+"="+article.getId()+"");
+		redisTemplate.delete("hot_articles");
+		//通过id查询文章
+		//Article article2 = service.select(article.getId());
+		//保存到es索引
+		//articleRepository.save(article2);
+		//System.err.println("同步es索引成功");
 		return service.update(article);
 	}
 	

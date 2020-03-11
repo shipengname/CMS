@@ -1,6 +1,7 @@
 package com.shipeng.controller;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.servlet.http.HttpSession;
 
@@ -67,6 +68,7 @@ public class AdminController {
 		return "index/index";
 	}
 	//首页的入口
+	@SuppressWarnings("unchecked")
 	@RequestMapping("index")
 	public String index(Model m,Article article,@RequestParam(defaultValue = "1")Integer pageNum,@RequestParam(defaultValue = "5")Integer pageSize) {
 		//查询所有的栏目
@@ -92,17 +94,45 @@ public class AdminController {
 			PageInfo<Article> info = articleService.selectByAdmin(article, pageNum, pageSize);
 			m.addAttribute("info", info);
 		}else {
+			article.setHot(1);
 			//查询所有的广告作为轮播图
 			List<Slide> slideList=slideService.selects();
 			m.addAttribute("slideList", slideList);	
 			//查询所有的热门文章
-			article.setHot(1);
-			PageInfo<Article> info = articleService.selectByAdmin(article, pageNum, pageSize);
-			m.addAttribute("articleList", info.getList());
+			//先从redis中查查有没有热门文章
+			//五分钟实时更新
+			//redisTemplate.expire("hot_articles", 5, TimeUnit.MINUTES);
+			List<Article> list = redisTemplate.opsForList().range("hot_articles", 0, 5);
+			if(list!=null&&list.size()!=0) {
+				//redis中有数据
+				m.addAttribute("articleList", list);
+				System.err.println("redis中的热门文章");
+			}else {
+				//从mysql中查找
+				PageInfo<Article> info = articleService.selectByAdmin(article, pageNum, pageSize);
+				redisTemplate.opsForList().leftPushAll("hot_articles", info.getList().toArray());
+				m.addAttribute("articleList", info.getList());
+				System.err.println("热门文章保存到redis数据库");
+			}
 		}
 		m.addAttribute("article", article);
-		PageInfo<Article> info2 = articleService.selectByAdmin(article, pageNum, 10);
-		m.addAttribute("newArcitles", info2.getList());
+		article.setHot(0);
+		//查询最新文章，显示到首页
+		//第一次访问redis中查询数据
+		List<Article> list = redisTemplate.opsForList().range("new_articles", 0, 2);
+		//看redis中数据是否为空
+		if(list!=null||list.size()!=0) {
+			System.err.println("从redis中查询了最新文章");
+			m.addAttribute("newArcitles", list);
+		}else {
+			//如果redis数据库中没有数据从MySQL中查询数据
+			System.err.println("从MySQL中查询最新文章");
+			PageInfo<Article> info2 = articleService.selectByAdmin(article, pageNum, pageSize);
+			System.err.println("最新文章保存到redis数据库中");
+			//最新文章保存到redis数据库中
+		    redisTemplate.opsForList().leftPushAll("new_articles", info2.getList().toArray());
+		    m.addAttribute("newArcitles", info2.getList());
+		}
 		return "index/index";
 	}
 	

@@ -18,6 +18,8 @@
       <import resource="classpath:es.xml" />
       <!-- 加载redis -->
       <import resource="classpath:redis.xml"/>
+      <!-- 加载kafka生产者的配置文件 -->
+      <import resource="classpath:producer.xml"/>
       <!-- 加载kafka消费者的配置文件 -->
       <import resource="classpath:consumer.xml"/>
       <!-- 注解扫描器，扫描每一层 -->
