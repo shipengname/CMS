@@ -5,6 +5,8 @@ import java.util.List;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
+import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,12 +25,14 @@ import com.shipeng.bean.Category;
 import com.shipeng.bean.Channel;
 import com.shipeng.bean.Slide;
 import com.shipeng.bean.User;
+import com.shipeng.dao.ArticleRepository;
 import com.shipeng.service.ArticleService;
 import com.shipeng.service.CategoryService;
 import com.shipeng.service.ChannelService;
 import com.shipeng.service.SlideService;
 import com.shipeng.service.UserService;
 import com.shipeng.utils.CMSJsonUtil;
+import com.shipeng.utils.HLUtils;
 @Controller
 public class AdminController {
 	
@@ -47,6 +51,21 @@ public class AdminController {
 	private SlideService slideService;
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private ArticleRepository articleRepository;
+	@Autowired
+	private ElasticsearchTemplate elasticsearchTemplate;
+	//搜索方法
+	@RequestMapping("/search")
+	public String search(String key,Model model,@RequestParam(defaultValue = "1")Integer pageNum,@RequestParam(defaultValue = "3")Integer pageSize) {
+		//普通搜索
+		//List<Article> list=articleRepository.findByTitle(key);
+		//高量搜索
+		PageInfo<Article> info = (PageInfo<Article>) HLUtils.findByHighLight(elasticsearchTemplate, Article.class, pageNum, pageSize, new String[] {"title"}, "id", key);
+		model.addAttribute("info", info);
+		model.addAttribute("key", key);
+		return "index/index";
+	}
 	//首页的入口
 	@RequestMapping("index")
 	public String index(Model m,Article article,@RequestParam(defaultValue = "1")Integer pageNum,@RequestParam(defaultValue = "5")Integer pageSize) {

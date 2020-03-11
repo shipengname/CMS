@@ -26,8 +26,8 @@ public class ArticleServiceImpl implements ArticleService {
 
 	@Override
 	public PageInfo<Article> selectByAdmin(Article article, Integer pageNum, Integer pageSize) {
-		PageHelper.startPage(pageNum, pageSize);
 		List<Article> list=adao.selectByAdmin(article);
+		PageHelper.startPage(pageNum, pageSize);
 		return new PageInfo<Article>(list);
 	}
 

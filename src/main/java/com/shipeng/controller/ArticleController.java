@@ -35,6 +35,15 @@ public class ArticleController {
 		m.addAttribute("article", article);
 		return "/admin/article";
 	}
+	/**
+	 * 
+	    * @Title: 审核文章
+	    * @Description: TODO(这里用一句话描述这个方法的作用)
+	    * @param @param article
+	    * @param @return    参数
+	    * @return boolean    返回类型
+	    * @throws
+	 */
 	@ResponseBody
 	@RequestMapping("updateArticle")
 	public boolean update(Article article) {

@@ -50,6 +50,17 @@
 
 			<!--  中间的中间-->
 			<div class="col-md-7 split">
+							<!-- 搜索框 -->
+			<form action="/search" method="get">
+				<div class="input-group mb-3">
+					<input type="text" name="key" value="${key}" class="form-control"
+						placeholder="请输入要搜索的内容" aria-label="Recipient's username"
+						aria-describedby="button-addon2">
+					<div class="input-group-append">
+						<button class="btn btn-outline-secondary" id="button-addon2">搜索<tton>
+					</div>
+				</div>
+			</form>
 				<!-- 第一次进入 没有选择栏目  默认显示轮播图和热门文章 -->
 				<c:if test="${article.channel_id==null}">
 					
@@ -127,8 +138,9 @@
 						</ul>
 						</div>
 						<hr>
-				
-					<div id="article">
+				</c:if>
+				<!-- 文章显示 -->
+				<div id="article">
 
 						<ul class="list-unstyled">
 							<c:forEach items="${info.list }" var="a">
@@ -149,12 +161,8 @@
 						</ul>
 
 
-					</div>
-				
-				
-				</c:if>
-
-
+					</div>	
+	
 			</div>
 			<!-- 中间的右边 -->
 			<div class="col-md-3 split min_h_500">
@@ -197,7 +205,8 @@
 
 
 
-
+	<a href="search?key=${key }&pageNum=${info.pageNum==1?'1':info.pageNum-1 }">上一页</a>
+    <a href="search?key=${key }&pageNum=${info.pageNum==11?'1':info.pageNum+1 }">下一页</a>
 
 	</div>
 </body>

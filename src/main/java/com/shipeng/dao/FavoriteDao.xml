@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shipeng.dao.FavoriteDao">
+<resultMap type="Favorite" id="favoMap">
+<id column="id" property="id"/>
+<result column="text" property="text"/>
+<result column="url" property="url"/>
+<result column="created" property="created"/>
+<association property="user" javaType="com.shipeng.bean.User">
+<id column="id" property="id"/>
+</association>
+</resultMap>
+<select id="getFavoList" resultMap="favoMap">
+	select * from cms_favorite where user_id=#{id} order by created desc
+</select>
+<insert id="addFavo">
+	insert into cms_favorite set text=#{text},url=#{url},user_id=#{user.id},created=now()
+</insert>
+<delete id="delete">
+	delete from cms_favorite where id=#{id}
+</delete>
+</mapper>

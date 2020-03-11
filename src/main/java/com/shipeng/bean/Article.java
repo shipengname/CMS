@@ -3,8 +3,13 @@ package com.shipeng.bean;
 import java.io.Serializable;
 import java.util.Date;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldType;
 import org.springframework.format.annotation.DateTimeFormat;
-
+//声明实体类是一个文档对象，指定索引库的名称（必须小写字母，如果是大写会报错）
+@Document(indexName = "article",type = "article")
 public class Article implements Serializable{
 	
 	
@@ -14,11 +19,11 @@ public class Article implements Serializable{
 	    */
 	    
 	private static final long serialVersionUID = -2963031748222938453L;
-
+	@Id
 	private Integer id;
-	
+	@Field(index = true,store = true,analyzer = "ik_max_word",searchAnalyzer = "ik_max_word",type = FieldType.text)
 	private String title;
-	
+	@Field(index = true,store = true,analyzer = "ik_max_word",searchAnalyzer = "ik_max_word",type = FieldType.text)
 	private String content;
 	
 	private String picture;

@@ -14,6 +14,8 @@
         http://www.springframework.org/schema/tx 
         http://www.springframework.org/schema/tx/spring-tx-4.2.xsd"> 
        
+      <!-- 加载es的配置文件 -->
+      <import resource="classpath:es.xml" />
       <!-- 加载redis -->
       <import resource="classpath:redis.xml"/>
       <!-- 加载kafka消费者的配置文件 -->
