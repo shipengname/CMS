@@ -30,6 +30,18 @@ public class ArticleListener implements MessageListener<String, String>{
 			//保存到es索引库
 			articleRepository.save(article);
 			System.err.println("同步es索引库成功");
+		}else if(jsonString.startsWith("xuefeng")) {
+			//做kafka增加点击量
+			String[] sp = jsonString.split("=");
+			Integer id = Integer.parseInt(sp[1]);
+			Article select = adao.select(id);
+			//拿到当前点击量
+			Integer hits = select.getHits();
+			//点击量加1
+			select.setHits(hits+1);
+			//更新到数据库
+			adao.updateHits(select);
+			System.err.println("用kafka增加点击量成功！！！");
 		}else {
 			Article article = JSON.parseObject(jsonString,Article.class);
 			adao.add(article);

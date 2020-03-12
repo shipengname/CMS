@@ -4,6 +4,7 @@
         xmlns:context="http://www.springframework.org/schema/context" 
         xmlns:aop="http://www.springframework.org/schema/aop"
         xmlns:tx="http://www.springframework.org/schema/tx" 
+        xmlns:task="http://www.springframework.org/schema/task"
         xsi:schemaLocation="
         http://www.springframework.org/schema/beans 
         http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
@@ -12,7 +13,8 @@
         http://www.springframework.org/schema/aop 
         http://www.springframework.org/schema/aop/spring-aop-4.2.xsd
         http://www.springframework.org/schema/tx 
-        http://www.springframework.org/schema/tx/spring-tx-4.2.xsd"> 
+        http://www.springframework.org/schema/tx/spring-tx-4.2.xsd
+        http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd"> 
        
       <!-- 加载es的配置文件 -->
       <import resource="classpath:es.xml" />
@@ -22,6 +24,9 @@
       <import resource="classpath:producer.xml"/>
       <!-- 加载kafka消费者的配置文件 -->
       <import resource="classpath:consumer.xml"/>
+      <!-- spring线程池的配置 -->
+	<task:executor id="executor" pool-size="10-1000"
+		queue-capacity="10" keep-alive="10" rejection-policy="CALLER_RUNS" />
       <!-- 注解扫描器，扫描每一层 -->
       <context:component-scan base-package="com.shipeng"/>
       <!-- 加载外部资源文件 -->

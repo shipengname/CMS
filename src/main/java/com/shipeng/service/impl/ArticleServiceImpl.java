@@ -63,4 +63,9 @@ public class ArticleServiceImpl implements ArticleService {
 	public List<Article> selectArticesContected(Article article1) {
 		return adao.selectArticesContected(article1);
 	}
+
+	@Override
+	public boolean updateHits(Article article) {
+		return adao.updateHits(article)>0;
+	}
 }

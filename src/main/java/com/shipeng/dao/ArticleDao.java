@@ -11,6 +11,8 @@ import com.shipeng.bean.Comment;
 public interface ArticleDao {
 
 	public int update(Article article);
+	
+	public int updateHits(Article article);
 
 	public List<Article> selectByAdmin(Article article);
 

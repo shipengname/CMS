@@ -11,7 +11,7 @@ import com.shipeng.bean.Comment;
 
 public interface ArticleService {
 	public boolean update(Article article);
-
+	public boolean updateHits(Article article);
 	public PageInfo<Article> selectByAdmin(Article article, Integer pageNum, Integer pageSize);
 
 	public Article select(Integer id);
