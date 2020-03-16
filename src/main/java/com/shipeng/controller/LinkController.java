@@ -11,7 +11,7 @@ import com.shipeng.bean.Link;
 import com.shipeng.service.LinkService;
 
 @Controller
-@RequestMapping("/my/link/")
+@RequestMapping("link")
 public class LinkController {
 	@Autowired
 	private LinkService service;
@@ -21,7 +21,8 @@ public class LinkController {
 	}
 	@RequestMapping("selectsLink")
 	public String selectsLink(Model m) {
-
-		return "/index/article";
+		List<Link> list=service.selectsLink();
+		m.addAttribute("list", list);
+		return "/my/link";
 	}
 }

@@ -67,7 +67,7 @@ function look(id){
 			<a class="list-group-item "  href="#" data="/article/addArticle">资料管理</a>
 			<a class="list-group-item "  href="javascript:void(0)" data="/favorite/selects">我的收藏夹</a>
 			<a class="list-group-item "  href="#" data="/article/addArticle">其他管理</a>
-			<a class="list-group-item "  href="javascript:;" data="/article/addArticle">友情链接</a>
+			<a class="list-group-item "  href="javascript:void(0)" data="/link/selectsLink">友情链接</a>
 				
 	
 	
