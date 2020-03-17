@@ -25,14 +25,15 @@ import com.shipeng.service.LinkService;
 @Controller
 @RequestMapping("indexs")
 public class IndexController {
+	
+	@Autowired
+	ThreadPoolTaskExecutor executor;
+	
 	@Autowired
 	private ArticleService service;
 	
 	@Autowired
 	private LinkService linkservice;
-	
-	@Autowired
-	ThreadPoolTaskExecutor executor;
 	@Autowired
 	RedisTemplate redisTemplate;
 	@Autowired
@@ -43,34 +44,34 @@ public class IndexController {
 	public String select(HttpServletRequest req,Model m,Article article,HttpSession session,
 			@RequestParam(defaultValue = "1")Integer pageNum,@RequestParam(defaultValue = "5")Integer pageSize) {
 		Article article1 = service.select(article.getId());
-		//=================kafka增加点击量===================
-//		kafkaTemplate.send("articles", "xuefeng="+article1.getId());
-		//=================================================
-		//===============redis增加点击量==================
-		//获取ip地址
+		//redis增加点击量
+		//获得当前ip
 		String ip = req.getRemoteAddr();
 		//拼接key
-		String key="hit_s"+article.getId()+"_"+ip;
+		String key="Hits_"+article1.getId()+ip;
 		Boolean hasKey = redisTemplate.hasKey(key);
-		//如果redis数据库中没有数据
+		//判断是否有值
 		if(!hasKey) {
-			//使用spring线程使点击量+1
+			//调用线程
 			executor.execute(new Runnable() {
-		
+				
 				@Override
 				public void run() {
-					//获取原来的点击量
+					//之前点击量
 					Integer hits = article1.getHits();
-					//点击量加1
+					//点击量加一
 					article1.setHits(hits+1);
-					//修改点击量加1
+					//修改点击量
 					service.updateHits(article1);
-					System.err.println("点击量已经加1");
-					//并往Redis保存key为Hits_${文章ID}_${用户IP地址}，value为空值的记录，而且有效时长为5分钟
-					redisTemplate.opsForValue().set(key, "",5,TimeUnit.MINUTES);
+					System.err.println("点击量已经加一");
+					redisTemplate.opsForValue().set(key, "",5, TimeUnit.MINUTES);
 				}
 			});
 		}
+		
+		//=================kafka增加点击量===================
+//		kafkaTemplate.send("articles", "xuefeng="+article1.getId());
+		//=================================================
 		PageInfo<Comment> info=service.selectComment(article.getId(),pageNum,pageSize);
 		List<Article> articles=service.selectArticesContected(article1);
 		List<Link> list=linkservice.selectsLink();
